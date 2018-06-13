@@ -18,12 +18,15 @@ public class PlayerMovement : MonoBehaviour
 
     void Update()
     {
-        Vector3 tmp = Input.GetAxis("Vertical") * cameraTransform.forward * movespeed
+        Vector3 movTmp = Input.GetAxis("Vertical") * cameraTransform.forward * movespeed
                            + Input.GetAxis("Horizontal") * cameraTransform.right * movespeed;
-        movement.x = tmp.x;
-        movement.z = tmp.z;
+        movement.x = movTmp.x;
+        movement.z = movTmp.z;
         movement.y += Physics.gravity.y * Time.deltaTime;
         characterController.Move(movement * Time.deltaTime);
-        //characterController.transform.rotation = Quaternion.LookRotation(tmp);
+
+        Vector3 rotTmp = cameraTransform.forward;
+        rotTmp.y = 0;
+        characterController.transform.rotation = Quaternion.LookRotation(rotTmp);
     }
 }
