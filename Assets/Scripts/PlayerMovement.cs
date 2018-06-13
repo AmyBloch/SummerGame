@@ -7,6 +7,7 @@ public class PlayerMovement : MonoBehaviour
 
     public CharacterController characterController;
     public float movespeed;
+    public Transform cameraTransform;
 
     private Vector3 movement;
 
@@ -17,10 +18,12 @@ public class PlayerMovement : MonoBehaviour
 
     void Update()
     {
-        movement.x = Input.GetAxis("Horizontal") * movespeed;
-        movement.z = Input.GetAxis("Vertical") * movespeed;
-        movement.y += Physics.gravity.y;
-        movement *= Time.deltaTime;
-        characterController.Move(movement);
+        Vector3 tmp = Input.GetAxis("Vertical") * cameraTransform.forward * movespeed
+                           + Input.GetAxis("Horizontal") * cameraTransform.right * movespeed;
+        movement.x = tmp.x;
+        movement.z = tmp.z;
+        movement.y += Physics.gravity.y * Time.deltaTime;
+        characterController.Move(movement * Time.deltaTime);
+        //characterController.transform.rotation = Quaternion.LookRotation(tmp);
     }
 }
