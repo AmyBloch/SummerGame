@@ -18,15 +18,24 @@ public class PlayerMovement : MonoBehaviour
 
     void Update()
     {
-        Vector3 movTmp = Input.GetAxis("Vertical") * cameraTransform.forward * movespeed
-                           + Input.GetAxis("Horizontal") * cameraTransform.right * movespeed;
+        // get inputs
+        Vector3 movTmp = Input.GetAxis("Vertical") * cameraTransform.forward
+                           + Input.GetAxis("Horizontal") * cameraTransform.right;
+        // isloate the x and y components
+        movTmp = Vector3.ProjectOnPlane(movTmp, Vector3.up);
+        movTmp.Normalize();
+        // apply movespeed
+        movTmp *= movespeed;
         movement.x = movTmp.x;
         movement.z = movTmp.z;
         movement.y += Physics.gravity.y * Time.deltaTime;
+        // move the character
         characterController.Move(movement * Time.deltaTime);
+        // rotate if the character moved
+        if(Vector3.zero != movTmp)
+        {
+            characterController.transform.rotation = Quaternion.LookRotation(movTmp);
+        }
 
-        Vector3 rotTmp = cameraTransform.forward;
-        rotTmp.y = 0;
-        characterController.transform.rotation = Quaternion.LookRotation(rotTmp);
     }
 }
