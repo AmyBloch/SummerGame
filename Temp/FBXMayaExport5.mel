@@ -1,0 +1,22 @@
+print "Starting maya loading and fbx conversion \n";
+	
+if (`file -q -exists "/Users/amybloch/Documents/GitHub/SummerGame/Assets/art/summergamebasetest.mb"`)
+{		
+	file -o "/Users/amybloch/Documents/GitHub/SummerGame/Assets/art/summergamebasetest.mb";
+	FBXExportEmbeddedTextures -v false;
+	// FBXExportHardEdges -v true;
+	FBXExportApplyConstantKeyReducer -v false;
+	FBXExportShowUI -v false;
+
+	print "Before fbx export\n";
+	FBXExport -f "/Users/amybloch/Documents/GitHub/SummerGame/Temp/ExportedFBXFile.fbx";
+	print "after fbx export\n";
+}
+else
+	print "Could not open Maya file.";
+
+sysFile -delete "/Users/amybloch/Documents/GitHub/SummerGame/Temp/CommandPipe";
+
+$donepipeKill = `fopen "/Users/amybloch/Documents/GitHub/SummerGame/Temp/SyncPipeKill" "w"`;
+fwrite $donepipeKill "Done";
+fclose $donepipeKill;
